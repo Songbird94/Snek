@@ -1490,6 +1490,7 @@ int main(int argc, char* argv[]) {
       return 0;
     }
   } else {
+    //test_find_head();
     if (!test_and_print("create_default_state (Task 1)", test_create_default_state)) {
       return 0;
     }

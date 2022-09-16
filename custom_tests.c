@@ -98,36 +98,123 @@ bool test_is_vowel() {
 
 bool test_is_tail() {
   // TODO: Implement this function.
+  if (!assert_true("w", is_tail('w'))) {
+    return false;
+  }
+  if (!assert_true("a", is_tail('a'))) {
+    return false;
+  }
+  if (!assert_true("s", is_tail('s'))) {
+    return false;
+  }
+  if (!assert_true("d", is_tail('d'))) {
+    return false;
+  }
+  char others[] = "WASD^<>vx";
+  for (size_t i = 0; i < strlen(others); i++) {
+    if (!assert_false("not tail", is_tail(others[i]))) {
+      return false;
+    }
+  }
   return true;
 }
 
 bool test_is_head() {
   // TODO: Implement this function.
+  if (!assert_true("W", is_head('W'))) {
+    return false;
+  }
+  if (!assert_true("A", is_head('A'))) {
+    return false;
+  }
+  if (!assert_true("S", is_head('S'))) {
+    return false;
+  }
+  if (!assert_true("D", is_head('D'))) {
+    return false;
+  }
+  if (!assert_true("x", is_head('x'))) {
+    return false;
+  }
+  char others[] = "wasd^<>v";
+  for (size_t i = 0; i < strlen(others); i++) {
+    if (!assert_false("not head", is_head(others[i]))) {
+      return false;
+    }
+  }
   return true;
 }
 
 bool test_is_snake() {
   // TODO: Implement this function.
+  char snake[] = "wasd^<v>WASDx";
+  for (size_t i = 0; i < strlen(snake); i++) {
+    if (!assert_true("snake", is_snake(snake[i]))) {
+      return false;
+    }
+  }
   return true;
 }
 
 bool test_body_to_tail() {
   // TODO: Implement this function.
+  if (!assert_equals_char("^ to w", 'w', body_to_tail('^'))) {
+    return false;
+  }
+  if (!assert_equals_char("< to a", 'a', body_to_tail('<'))) {
+    return false;
+  }
+  if (!assert_equals_char("v to s", 's', body_to_tail('v'))) {
+    return false;
+  }
+  if (!assert_equals_char("> to d", 'd', body_to_tail('>'))) {
+    return false;
+  }
   return true;
 }
 
 bool test_head_to_body() {
   // TODO: Implement this function.
+  if (!assert_equals_char("W to ^", '^', head_to_body('W'))) {
+    return false;
+  }
+  if (!assert_equals_char("A to <", '<', head_to_body('A'))) {
+    return false;
+  }
+  if (!assert_equals_char("S to v", 'v', head_to_body('S'))) {
+    return false;
+  }
+  if (!assert_equals_char("D to >", '>', head_to_body('D'))) {
+    return false;
+  }
   return true;
 }
 
 bool test_get_next_x() {
   // TODO: Implement this function.
+  if (!assert_equals_unsigned_int("+1", 3, get_next_row(2, 's'))) {
+    return false;
+  }
+  if (!assert_equals_unsigned_int("-1", 1, get_next_row(2, 'w'))) {
+    return false;
+  }
+  if (!assert_equals_unsigned_int("0", 2, get_next_row(2, 'a'))) {
+    return false;
+  }
   return true;
 }
 
 bool test_get_next_y() {
   // TODO: Implement this function.
+  if (!assert_equals_unsigned_int("+1", 3, get_next_col(2, 'D'))) {
+    return false;
+  }
+  if (!assert_equals_unsigned_int("-1", 1, get_next_col(2, 'A'))) {
+    return false;
+  }
+  if (!assert_equals_unsigned_int("0", 2, get_next_col(2, 'w'))) {
+    return false;
+  }
   return true;
 }
 
