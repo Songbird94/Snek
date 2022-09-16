@@ -337,19 +337,48 @@ game_state_t* load_board(char* filename) {
   game_state_t* state = malloc(sizeof(game_state_t));
   state->board = malloc(sizeof(char*));
   FILE *file = fopen(filename, "r");
-  char buffer[255];
-  fgets(buffer, 255, file);
-  buffer[strlen(buffer) - 1] = '\0';
-  state->board[0] = malloc(sizeof(char) * (strlen(buffer)+1));
-  strcpy(state->board[0], buffer);
-  for (size_t i = 1; fgets(buffer, 255, file); i++) {
-    state->board = realloc(state->board, sizeof(char*) * (i+1));
-    state->board[i] = malloc(sizeof(char) * (strlen(buffer)+1));
-    buffer[strlen(buffer) - 1] = '\0';
-    strcpy(state->board[i], buffer);
-    state->num_rows = i;
+  char **buffer = malloc(sizeof(char*));
+  int row = 0;
+  int col = 0;
+  char c;
+  buffer[row] = malloc(sizeof(char));
+  while ((c = fgetc(file)) != EOF) {
+    if (col >= (strlen(buffer[row]) - 1)) {
+      buffer[row] = realloc(buffer[row], (sizeof(char) * (col+5)));
+    }
+    if (c == '\n') {
+      buffer[row][col] = '\0';
+      state->board[row] = malloc(sizeof(char) * (col+1));
+      strcpy(state->board[row], buffer[row]);
+      row = row + 1;
+      col = 0;
+      state->board = realloc(state->board, (sizeof(char*) * (row+1)));
+      buffer[row] = malloc(sizeof(char));
+      continue;
+    }
+    if (row >= ((sizeof(buffer)/sizeof(buffer[row])) - 1)) {
+      buffer = realloc(buffer, sizeof(char*) * (row+5));
+    }
+    buffer[row][col] = c;
+    col = col + 1;
   }
-  state->num_rows = state->num_rows + 1;
+  //unsigned int i = 0;
+  //while (fgetc(file) != EOF) {
+  //while (fgetc(file) != '\n') {
+  //  buffer[strlen(buffer) - 1] = fgetc(file);
+  //  buffer = realloc(buffer, sizeof(char) * (strlen(buffer)+1));
+  //}
+  //buffer[strlen(buffer) - 1] = '\0';
+  //state->board[0] = malloc(sizeof(char) * (strlen(buffer)+1));
+  //strcpy(state->board[0], buffer);
+  //for (size_t i = 1; fgets(buffer, 500, file); i++) {
+  //  state->board = realloc(state->board, sizeof(char*) * (i+1));
+  //  state->board[i] = malloc(sizeof(char) * (strlen(buffer)+1));
+  //  buffer[strlen(buffer) - 1] = '\0';
+  //  strcpy(state->board[i], buffer);
+  //  state->num_rows = i;
+  //}
+  state->num_rows = row;
   fclose(file);
   return state;
 }
@@ -396,6 +425,9 @@ static void find_head(game_state_t* state, unsigned int snum) {
     next_r = get_next_row(next_r, next);
     next_c = get_next_col(next_c, next);
     next = get_board_at(state, next_r, next_c);
+    if (is_head(head)) {
+      break;
+    }
   }
   state->snakes[snum].head_row = head_r;
   state->snakes[snum].head_col = head_c;
